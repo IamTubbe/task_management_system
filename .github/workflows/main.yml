@@ -1,0 +1,45 @@
+# .github/workflows/main.yml
+name: Python CI/CD Pipeline
+
+on:
+ push:
+   branches:
+     - main
+ pull_request:
+   branches:
+     - main
+
+jobs:
+ build-and-test:
+   runs-on: ubuntu-latest
+
+   steps:
+   - name: Checkout code
+     uses: actions/checkout@v4
+
+   - name: Set up Python
+     uses: actions/setup-python@v5
+     with:
+       python-version: '3.9' # หรือเวอร์ชันที่ใช้
+
+   - name: Install dependencies
+     run: |
+       python -m pip install --upgrade pip
+       # pip install -r requirements.txt # ถ้ามีไฟล์ requirements.txt
+       pip install flake8 black # ติดตั้ง linter/formatter
+
+   - name: Run Linters (Code Quality Check)
+     run: |
+       flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+       # black --check . # ถ้าใช้ black
+
+   - name: Run Tests (Conceptual - no actual tests yet)
+     run: |
+       echo "Running conceptual tests..."
+       # python -m unittest discover # ถ้ามี Unit Tests จริงๆ
+       # pytest # ถ้าใช้ pytest
+       echo "All checks passed!"
+
+   - name: Display success message
+     run: echo "CI/CD Pipeline finished successfully!"
+     
